@@ -4,7 +4,7 @@ const jwt=require('jsonwebtoken')
 const expressJwt=require('express-jwt')
 const Blog=require('../models/blog')
 const fs = require('fs');
-const { errorHandler } = require('../helpers/dbErrorHandler');
+const { errorHandler } = require('../helpers/dberrorHandler');
 const _ = require('lodash');
 const sgMail = require('@sendgrid/mail'); // SENDGRID_API_KEY
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);

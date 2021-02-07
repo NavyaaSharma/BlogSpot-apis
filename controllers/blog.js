@@ -6,7 +6,7 @@ const formidable = require('formidable');
 const slugify = require('slugify');
 const stripHtml = require('string-strip-html');
 const _ = require('lodash');
-const { errorHandler } = require('../helpers/dbErrorHandler');
+const { errorHandler } = require('../helpers/dberrorHandler');
 const fs = require('fs');
 const { smartTrim } = require('../helpers/blog');
 
