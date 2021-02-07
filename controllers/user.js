@@ -3,7 +3,7 @@ const Blog = require('../models/blog');
 const _ = require('lodash');
 const formidable = require('formidable');
 const fs = require('fs');
-const { errorHandler } = require('../helpers/dbErrorHandler');
+const { errorHandler } = require('../helpers/dberrorHandler');
 
 exports.read=(req,res)=>{
     req.profile.hash_password=undefined
