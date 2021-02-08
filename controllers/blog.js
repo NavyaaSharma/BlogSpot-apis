@@ -29,11 +29,11 @@ exports.create = (req, res) => {
             });
         }
 
-        if (!body || body.length < 200) {
-            return res.status(400).json({
-                error: 'Content is too short'
-            });
-        }
+        // if (!body || body.length < 200) {
+        //     return res.status(400).json({
+        //         error: 'Content is too short'
+        //     });
+        // }
 
         if (!categories || categories.length === 0) {
             return res.status(400).json({
