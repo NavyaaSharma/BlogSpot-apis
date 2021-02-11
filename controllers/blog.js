@@ -34,6 +34,7 @@ exports.create = (req, res) => {
         //         error: 'Content is too short'
         //     });
         // }
+        
 
         if (!categories || categories.length === 0) {
             return res.status(400).json({
