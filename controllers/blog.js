@@ -34,7 +34,7 @@ exports.create = (req, res) => {
         //         error: 'Content is too short'
         //     });
         // }
-        
+
 
         if (!categories || categories.length === 0) {
             return res.status(400).json({
@@ -42,6 +42,7 @@ exports.create = (req, res) => {
             });
         }
 
+        
         if (!tags || tags.length === 0) {
             return res.status(400).json({
                 error: 'At least one tag is required'
