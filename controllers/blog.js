@@ -42,7 +42,7 @@ exports.create = (req, res) => {
             });
         }
 
-        
+
         if (!tags || tags.length === 0) {
             return res.status(400).json({
                 error: 'At least one tag is required'
@@ -60,6 +60,7 @@ exports.create = (req, res) => {
         if(req.user.role==1)
         {
             blog.isPublished=true;
+            
         }
         else
         {
