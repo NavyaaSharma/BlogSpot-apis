@@ -305,7 +305,7 @@ exports.listRelated = (req, res) => {
     const { _id, categories } = req.body.blog;
 
     Blog.find({ _id: { $ne: _id }, categories: { $in: categories },isPublished:true })
-        .limit(limit)
+        // .limit(limit)
         .populate('postedBy', '_id name profile')
         .select('title slug excerpt postedBy createdAt updatedAt')
         .exec((err, blogs) => {
