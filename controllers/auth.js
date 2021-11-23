@@ -12,8 +12,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.signup = (req, res) => {
     const { name, email, password } = req.body;
-    User.findOne({ email: email.toLowerCase() }, (err, user) => {
-        if (user) {
+    User.findOne({ email: email.toLowerCase() }, (err, checkuser) => {
+        if (checkuser) {
             return res.status(400).json({
                 error: 'Email is taken'
             });
