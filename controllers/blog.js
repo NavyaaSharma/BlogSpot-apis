@@ -1,6 +1,6 @@
 const Blog = require('../models/blog');
 const Category = require('../models/category');
-const User=require('../models/user')
+const User = require('../models/user')
 const Tag = require('../models/tags');
 const formidable = require('formidable');
 const slugify = require('slugify');
@@ -52,19 +52,17 @@ exports.create = (req, res) => {
         let blog = new Blog();
         blog.title = title;
         blog.body = body;
-        blog.excerpt = smartTrim(body, 320, ' ', ' ...');
+        blog.excerpt = smartTrim(body, 100, ' ', ' ...');
         blog.slug = slugify(title).toLowerCase();
         blog.mtitle = `${title} | ${process.env.APP_NAME}`;
         blog.mdesc = stripHtml(body.substring(0, 160));
         blog.postedBy = req.user._id;
-        if(req.user.role==1)
-        {
-            blog.isPublished=true;
-            
+        if (req.user.role == 1) {
+            blog.isPublished = true;
+
         }
-        else
-        {
-            blog.isPublished=false;
+        else {
+            blog.isPublished = false;
         }
         // categories and tags
         let arrayOfCategories = categories && categories.split(',');
@@ -138,7 +136,7 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
     let categories;
     let tags;
 
-    Blog.find({isPublished:true})
+    Blog.find({ isPublished: true })
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username profile')
@@ -155,13 +153,13 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
                     error: errorHandler(err)
                 });
             }
-            
+
             blogs = data; // blogs
             // get all categories
             Category.find({}).exec((err, c) => {
                 if (err) {
                     console.log(errorHandler(err))
-                console.log(err)
+                    console.log(err)
                     return res.json({
                         error: errorHandler(err)
                     });
@@ -177,13 +175,13 @@ exports.listAllBlogsCategoriesTags = (req, res) => {
                         });
                     }
                     tags = t;
-                    
-                   console.log({ blogs, categories, tags, size: blogs.length })
+
+                    console.log({ blogs, categories, tags, size: blogs.length })
                     res.json({
-                            payload:{blogs}, 
-                            categories, 
-                            tags, 
-                            size: blogs.length
+                        payload: { blogs },
+                        categories,
+                        tags,
+                        size: blogs.length
                     });
                 });
             });
@@ -249,8 +247,8 @@ exports.update = (req, res) => {
             const { body, desc, categories, tags } = fields;
 
             if (body) {
-                oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...');
-                oldBlog.desc = stripHtml(body.substring(0, 160));
+                oldBlog.excerpt = smartTrim(body, 100, ' ', ' ...');
+                oldBlog.mdesc = stripHtml(body.substring(0, 160));
             }
 
             if (categories) {
@@ -304,7 +302,7 @@ exports.listRelated = (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 3;
     const { _id, categories } = req.body.blog;
 
-    Blog.find({ _id: { $ne: _id }, categories: { $in: categories },isPublished:true })
+    Blog.find({ _id: { $ne: _id }, categories: { $in: categories }, isPublished: true })
         .limit(limit)
         .populate('postedBy', '_id name profile')
         .select('title slug excerpt postedBy createdAt updatedAt')
@@ -324,7 +322,7 @@ exports.listSearch = (req, res) => {
     if (search) {
         Blog.find(
             {
-              isPublished:true, $or: [{ title: { $regex: search, $options: 'i' } }, { body: { $regex: search, $options: 'i' } }]
+                isPublished: true, $or: [{ title: { $regex: search, $options: 'i' } }, { body: { $regex: search, $options: 'i' } }]
             },
             (err, blogs) => {
                 if (err) {
@@ -362,27 +360,25 @@ exports.listByUser = (req, res) => {
     });
 };
 
-exports.publish=(req, res) =>{
+exports.publish = (req, res) => {
     //console.log(req.params.id)
     const slug = req.params.slug.toLowerCase();
-    Blog.findOne({slug}).exec((err, data)=>{
-        if(err)
-         {
+    Blog.findOne({ slug }).exec((err, data) => {
+        if (err) {
             return res.json({
                 error: errorHandler(err)
             });
-         }   
+        }
         console.log(data)
-        data.isPublished=true;
+        data.isPublished = true;
 
-        data.save((err,result)=>{
-            if(err)
-            {
+        data.save((err, result) => {
+            if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)
                 });
             }
-            res.json({message: 'Blog published successfully'})
+            res.json({ message: 'Blog published successfully' })
         })
     })
 }
