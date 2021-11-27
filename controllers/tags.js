@@ -1,53 +1,50 @@
-const Tags=require('../models/tags')
+const Tags = require('../models/tags')
 const Blog = require('../models/blog');
-const slugify=require('slugify')
-const {errorHandler} =require('../helpers/dberrorHandler')
+const slugify = require('slugify')
+const { errorHandler } = require('../helpers/dberrorHandler')
 
-exports.create=(req,res)=>{
-    var slug=slugify(req.body.name).toLowerCase()
-    var tag=new Tags({
-        name:req.body.name,
+exports.create = (req, res) => {
+    var slug = slugify(req.body.name).toLowerCase()
+    var tag = new Tags({
+        name: req.body.name,
         slug
     })
-    tag.save((err,data)=>{
-        if(err)
-        {
+    tag.save((err, data) => {
+        if (err) {
             res.status(400).json({
-                error:errorHandler(err)
+                error: errorHandler(err)
             })
         }
-        else{
+        else {
             res.status(201).json(data)
         }
     })
 }
 
-exports.list=(req,res)=>{
-    Tags.find({}).exec((err,tag)=>{
-        if(err)
-        {
+exports.list = (req, res) => {
+    Tags.find({}).exec((err, tag) => {
+        if (err) {
             res.status(400).json({
-                error:err
+                error: err
             })
         }
-        else{
+        else {
             res.status(200).json({
-                message:"All tags retrieved",
-                payload:tag
+                message: "All tags retrieved",
+                payload: tag
             })
         }
     })
 }
 
-exports.read=(req,res)=>{
-    Tags.findOne({slug:req.params.slug}).exec((err,tag)=>{
-        if(err)
-        {
+exports.read = (req, res) => {
+    Tags.findOne({ slug: req.params.slug }).exec((err, tag) => {
+        if (err) {
             res.status(400).json({
-                error:err
+                error: err
             })
         }
-        Blog.find({ tags: tag, isPublished:true})
+        Blog.find({ tags: tag, isPublished: true })
             .populate('categories', '_id name slug')
             .populate('tags', '_id name slug')
             .populate('postedBy', '_id name')
@@ -63,18 +60,37 @@ exports.read=(req,res)=>{
     })
 }
 
-exports.remove=(req,res)=>{
-    Tags.findOneAndRemove({slug:req.params.slug}).exec((err,tag)=>{
-        if(err)
-        {
+exports.remove = (req, res) => {
+    Tags.findOneAndRemove({ slug: req.params.slug }).exec((err, tag) => {
+        if (err) {
             res.status(400).json({
-                error:err
+                error: err
             })
         }
-        else{
+        else {
             res.status(200).json({
-                message:"Tag deleted"
+                message: "Tag deleted"
             })
         }
     })
 }
+
+exports.tagSearch = (req, res) => {
+    console.log(req.query);
+    const { search } = req.query;
+    if (search) {
+        Tags.find(
+            {
+                $or: [{ name: { $regex: search, $options: 'i' } }]
+            },
+            (err, tags) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    });
+                }
+                res.json(tags);
+            }
+        )
+    }
+};

@@ -316,13 +316,14 @@ exports.listRelated = (req, res) => {
         });
 };
 
+//, { body: { $regex: search, $options: 'i' } }
 exports.listSearch = (req, res) => {
     console.log(req.query);
     const { search } = req.query;
     if (search) {
         Blog.find(
             {
-                isPublished: true, $or: [{ title: { $regex: search, $options: 'i' } }, { body: { $regex: search, $options: 'i' } }]
+                isPublished: true, $or: [{ title: { $regex: search, $options: 'i' } }]
             },
             (err, blogs) => {
                 if (err) {
