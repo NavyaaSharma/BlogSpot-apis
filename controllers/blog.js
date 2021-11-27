@@ -331,7 +331,19 @@ exports.listSearch = (req, res) => {
                         error: errorHandler(err)
                     });
                 }
-                res.json(blogs);
+                Tag.find(
+                    {
+                        $or: [{ name: { $regex: search, $options: 'i' } }]
+                    },
+                    (err, tags) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: errorHandler(err)
+                            });
+                        }
+                        res.json({ blogs, tags });
+                    }
+                )
             }
         ).select('-photo -body');
     }
