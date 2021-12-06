@@ -15,7 +15,7 @@ exports.signup = (req, res) => {
     User.findOne({ email: email.toLowerCase() }, (err, checkuser) => {
         if (checkuser) {
             return res.status(400).json({
-                error: 'Email is taken'
+                error: 'An account with this email already exists'
             });
         }
         let username = shortId.generate();
@@ -136,12 +136,12 @@ exports.signin = (req, res) => {
     User.findOne({ email: req.body.email }).exec((err, user) => {
         if (err || !user) {
             return res.status(404).json({
-                error: "User with given email dosent exist. Please signup"
+                error: "Email or password is incorrect."
             })
         }
         if (!user.authenticate(req.body.password)) {
             return res.status(400).json({
-                error: "Email and password dont match"
+                error: "Email or password is incorrect."
             })
         }
 
